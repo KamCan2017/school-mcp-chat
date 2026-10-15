@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/src/School.Web/school.db-shm
+/src/School.Web/school.db-shm
+/src/School.Web/school.db-wal
