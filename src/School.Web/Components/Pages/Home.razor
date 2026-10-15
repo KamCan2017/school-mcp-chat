@@ -1,0 +1,132 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject HomeViewModel ViewModel
+@implements IDisposable
+
+<PageTitle>School assistant</PageTitle>
+
+<div class="campus-shell">
+    <header class="campus-topbar">
+        <a class="campus-brand" href="/" aria-label="School assistant home">
+            <span class="brand-symbol" aria-hidden="true">S</span>
+            <span>campus<span class="brand-light">desk</span></span>
+        </a>
+        <div class="topbar-caption">SCHOOL KNOWLEDGE, AT YOUR SERVICE</div>
+        <div class="service-status @(ViewModel.IsMcpReady ? "online" : "offline")">
+            <span class="service-dot" aria-hidden="true"></span>
+            @(ViewModel.IsMcpReady ? "Data connected" : "Connecting")
+        </div>
+    </header>
+
+    <main class="campus-layout">
+        <aside class="welcome-rail">
+            <div class="rail-copy">
+                <span class="rail-kicker"><span aria-hidden="true">✳</span> THE SCHOOL HELPER</span>
+                <h1>Make campus<br />knowledge<br /><em>work for you.</em></h1>
+                <p>One place to find the people, classes, and places that make up your school.</p>
+            </div>
+
+            <div class="topics-card">
+                <div class="topics-heading">I can help you find</div>
+                <div class="topic-row"><span class="topic-icon icon-course" aria-hidden="true">▤</span><span>Courses &amp; schedules</span><span class="topic-chevron">↗</span></div>
+                <div class="topic-row"><span class="topic-icon icon-people" aria-hidden="true">♧</span><span>Professors &amp; students</span><span class="topic-chevron">↗</span></div>
+                <div class="topic-row"><span class="topic-icon icon-place" aria-hidden="true">⌖</span><span>Classrooms &amp; locations</span><span class="topic-chevron">↗</span></div>
+            </div>
+
+            <div class="rail-note">
+                <span class="note-mark" aria-hidden="true">“</span>
+                <p>Ask naturally. Get a clear answer, not a list of data.</p>
+            </div>
+            <div class="rail-decoration" aria-hidden="true"><span></span><span></span><span></span></div>
+        </aside>
+
+        <section class="chat-workspace" aria-label="School assistant chat">
+            <div class="chat-heading">
+                <div>
+                    <span class="chat-kicker">YOUR PERSONAL SCHOOL GUIDE</span>
+                    <h2>What would you like to know?</h2>
+                </div>
+                <span class="chat-heading-icon" aria-hidden="true">✦</span>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(ViewModel.McpLastError))
+            {
+                <div class="connection-error" role="alert">
+                    <span class="error-mark" aria-hidden="true">!</span>
+                    <span>Could not start the MCP server: @ViewModel.McpLastError</span>
+                </div>
+            }
+
+            @if (ViewModel.Turns.Count >= 1)
+            {
+                <section class="prompt-starters" aria-label="Suggested questions">
+                    <div class="starters-label">A FEW PLACES TO START</div>
+                    <div class="starter-list">
+                        @foreach (var suggestion in HomeViewModel.Suggestions)
+                        {
+                            <button type="button" class="starter-button" @onclick="() => ViewModel.SendAsync(suggestion)">
+                                <span class="starter-arrow" aria-hidden="true">↗</span>
+                                <span>@suggestion</span>
+                            </button>
+                        }
+                    </div>
+                </section>
+            }
+
+            <section class="chat-card" aria-label="Conversation">
+                <div class="chat-scroll" aria-live="polite">
+                    @foreach (var turn in ViewModel.Turns)
+                    {
+                        <article class="chat-message @turn.Role.ToLowerInvariant()">
+                            @if (turn.Role == "assistant")
+                            {
+                                <div class="message-avatar" aria-hidden="true">S</div>
+                            }
+                            <div class="message-body">
+                                <div class="message-byline">@(turn.Role == "assistant" ? "CAMPUS DESK" : "YOU")</div>
+                                <div class="message-content">
+                                    <div class="bubble-text">@turn.Text</div>
+                                    @if (!string.IsNullOrWhiteSpace(turn.RequestSummary))
+                                    {
+                                        <details class="request-details">
+                                            <summary>View request details</summary>
+                                            <div>@turn.RequestSummary</div>
+                                            @if (!string.IsNullOrWhiteSpace(turn.ToolName))
+                                            {
+                                                <code>@($"{turn.ToolName}({turn.ToolArguments})")</code>
+                                            }
+                                        </details>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(turn.ResultText))
+                                    {
+                                        <div class="result-text @(turn.IsError ? "error" : "")">@turn.ResultText</div>
+                                    }
+                                </div>
+                            </div>
+                        </article>
+                    }
+                    @if (ViewModel.IsBusy)
+                    {
+                        <div class="waiting-state" role="status" aria-label="Campus Desk is thinking">
+                            <span></span><span></span><span></span>
+                        </div>
+                    }
+                </div>
+
+                <form class="question-form" @onsubmit="ViewModel.SubmitAsync" @onsubmit:preventDefault>
+                    <label class="visually-hidden" for="question-input">Ask a question</label>
+                    <span class="input-spark" aria-hidden="true">✧</span>
+                    <input id="question-input"
+                           @bind="ViewModel.Draft"
+                           @bind:event="oninput"
+                           placeholder="Ask about a course, person, or place…"
+                           autocomplete="off" />
+                    <button type="submit" disabled="@ViewModel.IsBusy" aria-label="Send question">
+                        <span>Ask</span><span aria-hidden="true">↑</span>
+                    </button>
+                </form>
+                <div class="privacy-note"><span aria-hidden="true">●</span> Answers are based on your school’s information</div>
+            </section>
+        </section>
+    </main>
+</div>

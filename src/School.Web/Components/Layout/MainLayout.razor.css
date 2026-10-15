@@ -1,0 +1,62 @@
+.app-layout {
+    min-height: 100vh;
+    display: flex;
+    background: #f6f5f0;
+}
+
+.sidebar {
+    z-index: 2;
+    width: 250px;
+    flex: 0 0 250px;
+    background: #183f37;
+}
+
+.main-content {
+    min-width: 0;
+    min-height: 100vh;
+    flex: 1;
+    background: #f6f5f0;
+}
+
+.layout-content {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+@media (max-width: 640.98px) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex: 0 0 auto;
+    }
+
+    .main-content,
+    .layout-content {
+        min-height: auto;
+    }
+}
+
+#blazor-error-ui {
+    color-scheme: light only;
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

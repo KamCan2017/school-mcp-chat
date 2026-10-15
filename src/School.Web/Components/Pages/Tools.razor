@@ -1,0 +1,90 @@
+@page "/tools"
+@rendermode InteractiveServer
+@inject ToolsViewModel ViewModel
+
+<PageTitle>MCP tools</PageTitle>
+
+<div class="tools-page">
+    <header class="tools-topbar">
+        <a class="tools-brand" href="/" aria-label="Campus Desk home">
+            <span class="tools-brand-mark" aria-hidden="true">S</span>
+            <span>campus<span class="tools-brand-light">desk</span></span>
+        </a>
+        <span class="tools-topbar-caption">SCHOOL KNOWLEDGE, AT YOUR SERVICE</span>
+        <span class="tools-status @ViewModel.McpStatusCssClass">
+            <span aria-hidden="true"></span>
+            @ViewModel.McpStatusText
+        </span>
+    </header>
+
+    <main class="tools-layout">
+        <aside class="tools-rail">
+            <div class="tools-rail-content">
+                <span class="tools-kicker"><span aria-hidden="true">✳</span> UNDER THE HOOD</span>
+                <h1>Small tools.<br />Useful <em>answers.</em></h1>
+                <p>Campus Desk discovers these MCP tools from the school server and uses them to find the information you ask for.</p>
+            </div>
+            <div class="tools-rail-info">
+                <span class="rail-info-label">TOOL DISCOVERY</span>
+                <strong>Automatic at startup</strong>
+                <span class="rail-info-rule"></span>
+                <span class="rail-info-label">CONNECTED SERVER</span>
+                <strong>School MCP</strong>
+            </div>
+            <div class="tools-rail-decoration" aria-hidden="true"><span></span><span></span></div>
+        </aside>
+
+        <section class="tools-content" aria-labelledby="tools-heading">
+            <div class="tools-section-heading">
+                <div>
+                    <span class="tools-kicker light">LIVE FROM THE MCP SERVER</span>
+                    <h2 id="tools-heading">Available tools</h2>
+                    <p>These capabilities are ready for the assistant to use.</p>
+                </div>
+                @if (ViewModel.IsMcpReady)
+                {
+                    <span class="tool-count"><strong>@ViewModel.ToolCount</strong> tools</span>
+                }
+            </div>
+
+            @if (!ViewModel.IsMcpReady)
+            {
+                <div class="tools-state @ViewModel.DisconnectedStateCssClass" role="status">
+                    <span class="state-icon" aria-hidden="true">@ViewModel.DisconnectedStateIcon</span>
+                    <div>
+                        <strong>@ViewModel.DisconnectedStateTitle</strong>
+                        <p>@ViewModel.DisconnectedStateMessage</p>
+                    </div>
+                </div>
+            }
+            else if (ViewModel.ToolCount == 0)
+            {
+                <div class="tools-state empty-state">
+                    <span class="state-icon" aria-hidden="true">⌘</span>
+                    <div>
+                        <strong>No tools were advertised</strong>
+                        <p>The server connected, but did not provide any tools.</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="tool-grid">
+                    @foreach (var tool in ViewModel.Tools)
+                    {
+                        <article class="tool-card">
+                            <div class="tool-card-top">
+                                <span class="tool-icon" aria-hidden="true">⌘</span>
+                                <span class="tool-type">MCP TOOL</span>
+                                <span class="tool-card-arrow" aria-hidden="true">↗</span>
+                            </div>
+                            <h3><code>@tool.Name</code></h3>
+                            <p>@tool.Description</p>
+                            <div class="tool-card-footer"><span></span> Ready to use</div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    </main>
+</div>

@@ -1,0 +1,40 @@
+﻿<div class="nav-shell">
+    <header class="nav-header">
+        <a class="nav-brand" href="/" aria-label="Campus Desk home">
+            <span class="nav-brand-mark" aria-hidden="true">S</span>
+            <span>campus<span class="nav-brand-light">desk</span></span>
+        </a>
+        <label class="nav-toggle" for="navigation-toggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </label>
+    </header>
+
+    <input id="navigation-toggle" type="checkbox" title="Navigation menu" class="nav-toggle-input" />
+
+    <div class="nav-scrollable" onclick="document.querySelector('.nav-toggle-input').click()">
+        <nav class="nav-list" aria-label="Main navigation">
+            <div class="nav-section-label">YOUR WORKSPACE</div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                    <span class="nav-icon" aria-hidden="true">✳</span>
+                    <span>Chat assistant</span>
+                    <span class="nav-arrow" aria-hidden="true">↗</span>
+                </NavLink>
+            </div>
+            <div class="nav-item">
+                <NavLink class="nav-link" href="/tools">
+                    <span class="nav-icon tools-icon" aria-hidden="true">⌘</span>
+                    <span>MCP tools</span>
+                    <span class="nav-arrow" aria-hidden="true">↗</span>
+                </NavLink>
+            </div>
+        </nav>
+
+        <div class="nav-footer">
+            <span class="footer-orbit" aria-hidden="true">✦</span>
+            <div class="footer-title">School knowledge, together.</div>
+            <div class="footer-copy">A simple way to explore your campus information.</div>
+            <div class="footer-caption"><span></span> POWERED BY ASTY NOUKEU</div>
+        </div>
+    </div>
+</div>
